@@ -1,6 +1,6 @@
 <template>
   <div class="form-container active-form" v-click-outside="saveNote">
-    <form ref="noteForm"  id="todo-box" @click="clickedInput = true">
+    <form ref="noteForm" id="todo-box" @click="clickedInput = true">
       <div class="contents-icon">
         <br />
         <input
@@ -102,19 +102,15 @@
 </template>
 
 <script>
-// import { ref } from 'vue'
 
 export default {
-  // setup() {
-  //   const noteInput = ref(null)
-  //   return {
-  //     noteInput
-  //   }
-  // },
   props: {
     note: {
       type: Object,
       default: () => ({ title: '', text: '' })
+    },
+    isNoteAdded: {
+      type: Boolean
     }
   },
   data() {
@@ -128,8 +124,13 @@ export default {
     saveNote() {
       this.$emit('save-note', { title: this.title, text: this.text })
       setTimeout(() => {
-        this.$refs.noteForm.reset();
-      }, 2000);
+        if (this.isNoteAdded) {
+          this.$refs.noteForm.reset()
+          this.title = ''
+          this.text = ''
+          console.log(this.isNoteAdded, ' from child component')
+        }
+      }, 2000)
     }
   }
 }

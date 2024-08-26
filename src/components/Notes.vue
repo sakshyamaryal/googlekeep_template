@@ -1,6 +1,10 @@
 <template>
   <div>
-    <FormComponent :note="{ title: noteTitle, text: noteContent }" @save-note="saveNote" />
+    <FormComponent
+      :isNoteAdded="isNoteAdded"
+      :note="{ title: noteTitle, text: noteContent }"
+      @save-note="saveNote"
+    />
 
     <AddedNoteComponent
       :note="note"
@@ -15,7 +19,6 @@
 import { mapActions } from 'vuex'
 import FormComponent from './Reusable/FormComponent.vue'
 import AddedNoteComponent from './Reusable/AddedNoteComponent.vue'
-// import { Ref } from 'vue'
 
 export default {
   components: {
@@ -29,7 +32,8 @@ export default {
       isEditing: false,
       noteId: null,
       // notes: [],
-      clickedInput: false
+      clickedInput: false,
+      isNoteAdded: false
     }
   },
   methods: {
@@ -51,9 +55,12 @@ export default {
           await this.updateNote(updatedNote)
         } else {
           await this.addNote(updatedNote)
-
-
+          this.isNoteAdded = this.$store.getters.getAddState
+          console.log(this.isNoteAdded, ' comes from parent')
           // console.log(note, " note");
+          // if (this.isNoteAdded == true) {
+          //   this.isNoteAdded = false
+          // }
         }
 
         this.resetForm()
@@ -74,6 +81,10 @@ export default {
     async deleteNote(note) {
       await this.$store.dispatch('deleteNote', note.id)
     }
+  },
+  mounted() {
+    this.isNoteAdded = this.$store.getters.getAddState
+    console.log(this.isNoteAdded)
   }
 }
 </script>

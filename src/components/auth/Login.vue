@@ -7,7 +7,7 @@
             <h2>Login</h2>
           </div>
           <div class="card-body">
-            <form>
+            <form @submit.prevent="login">
               <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
                 <input
@@ -16,6 +16,7 @@
                   id="email"
                   placeholder="Enter email"
                   name="email"
+                  v-model="user.email"
                   required
                 />
               </div>
@@ -27,6 +28,7 @@
                   id="password"
                   placeholder="Enter password"
                   name="password"
+                  v-model="user.password"
                   required
                 />
               </div>
@@ -45,17 +47,39 @@
 </template>
 
 <script>
-// var store = new Vuex.Store({
-//     state:{
-//         submitted: false,
+import axios from 'axios'
+import {login as performLogIn} from './Authenticate'
 
-//     },
-//     mutations: {
-//         login(){
-//             state.submitted = true;
-//             return true;
-//         }
-//     }
-// });
+export default {
+  name: 'login',
+  data() {
+    return {
+      user: {
+        email: '',
+        password: ''
+      }
+    }
+  },
+  methods: {
+    async login() {
+      var data = {
+        email: this.user.email,
+        password: this.user.password
+      }
 
+      await axios
+        .post('http://localhost:8000/api/login', data)
+        .then((response) => {
+          console.log(response.data.token)
+          sessionStorage.setItem('token', response.data.token)
+          // localStorage.setItem('token',token);
+          performLogIn(response.data.token)
+
+        })
+        .catch((errorMessages) => {
+          console.log(errorMessages)
+        })
+    }
+  }
+}
 </script>
