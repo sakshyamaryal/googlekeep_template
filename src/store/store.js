@@ -1,47 +1,55 @@
-import { createStore } from 'vuex';
-import axios from 'axios';
+import { createStore } from 'vuex'
+import axios from 'axios'
 
 const store = createStore({
   state() {
     return {
-      notes: []
-    };
+      notes: [],
+      currentNote: { title: '', text: '' }
+    }
   },
   mutations: {
     SET_NOTES(state, notes) {
-      state.notes = notes;
+      state.notes = notes
     },
     ADD_NOTE(state, note) {
-      state.notes.push(note);
+      state.notes.push(note)
+      
     },
     UPDATE_NOTE(state, updatedNote) {
-      const index = state.notes.findIndex(note => note.id === updatedNote.id);
+      const index = state.notes.findIndex((note) => note.id === updatedNote.id)
       if (index !== -1) {
-        state.notes.splice(index, 1, updatedNote);
+        state.notes.splice(index, 1, updatedNote)
       }
     },
     DELETE_NOTE(state, id) {
-      state.notes = state.notes.filter(note => note.id !== id);
+      state.notes = state.notes.filter((note) => note.id !== id)
+    },
+    CLEAR_CURRENT_NOTE(state) {
+      state.currentNote = { title: '', text: '' }
     }
   },
   actions: {
     async fetchNotes({ commit }) {
-      const response = await axios.get('http://localhost:8000/api/notes');
-      commit('SET_NOTES', response.data);
+      const response = await axios.get('http://localhost:8000/api/notes')
+      commit('SET_NOTES', response.data)
     },
     async addNote({ commit }, note) {
-      const response = await axios.post('http://localhost:8000/api/notes', note);
-      commit('ADD_NOTE', response.data);
+      const response = await axios.post('http://localhost:8000/api/notes', note)
+      commit('ADD_NOTE', response.data)
+      if(response.data.success){
+        commit('CLEAR_CURRENT_NOTE')
+      }
     },
     async updateNote({ commit }, note) {
-      const response = await axios.put(`http://localhost:8000/api/notes/${note.id}`, note);
-      commit('UPDATE_NOTE', response.data);
+      const response = await axios.put(`http://localhost:8000/api/notes/${note.id}`, note)
+      commit('UPDATE_NOTE', response.data)
     },
     async deleteNote({ commit }, id) {
-      await axios.delete(`http://localhost:8000/api/notes/${id}`);
-      commit('DELETE_NOTE', id);
+      await axios.delete(`http://localhost:8000/api/notes/${id}`)
+      commit('DELETE_NOTE', id)
     }
   }
-});
+})
 
-export default store;
+export default store

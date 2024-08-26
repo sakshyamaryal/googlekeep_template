@@ -15,6 +15,7 @@
 import { mapActions } from 'vuex'
 import FormComponent from './Reusable/FormComponent.vue'
 import AddedNoteComponent from './Reusable/AddedNoteComponent.vue'
+// import { Ref } from 'vue'
 
 export default {
   components: {
@@ -27,7 +28,7 @@ export default {
       noteContent: '',
       isEditing: false,
       noteId: null,
-      notes: [],
+      // notes: [],
       clickedInput: false
     }
   },
@@ -50,10 +51,13 @@ export default {
           await this.updateNote(updatedNote)
         } else {
           await this.addNote(updatedNote)
+
+
+          // console.log(note, " note");
         }
 
         this.resetForm()
-      } 
+      }
     },
     resetForm() {
       this.noteTitle = ''
