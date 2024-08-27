@@ -15,8 +15,8 @@
         @delete-note="deleteNote"
         @click="getNoteContent(note.id, note.title, note.text)"
         :data-noteid="note.id"
-        :noteContent = noteContent
-        :noteTitle = noteTitle
+        :noteContent="noteContent"
+        :noteTitle="noteTitle"
         :user_id="note.user_id"
         :editable="isEditing"
       />
@@ -45,8 +45,17 @@ import FormComponent from './Reusable/FormComponent.vue'
 import AddedNoteComponent from './Reusable/AddedNoteComponent.vue'
 import Modal from './Reusable/Modal.vue'
 import Icon from './icons/Icons.vue'
+import { ref, watch } from 'vue'
+// import { userId  } from './auth/Authenticate'
 
 export default {
+  // setup() {
+  //   const userid = ref(userId())
+
+  //   return {
+  //     userid
+  //   }
+  // },
   components: {
     FormComponent,
     AddedNoteComponent,
@@ -62,7 +71,8 @@ export default {
       notes: [],
       clickedInput: false,
       isNoteAdded: false,
-      showModal: false
+      showModal: false,
+      currentUserDetail: []
     }
   },
   methods: {
@@ -78,6 +88,8 @@ export default {
         if (this.noteId) {
           updatedNote.id = this.noteId
           this.isEditing = true
+        } else {
+          updatedNote.user_id = localStorage.getItem('userid')
         }
 
         if (this.isEditing) {
@@ -98,7 +110,7 @@ export default {
         id: this.noteId
       }
       this.saveNote(note)
-      this.checkModal();
+      this.checkModal()
     },
     resetForm() {
       this.noteTitle = ''
@@ -116,13 +128,10 @@ export default {
       await this.$store.dispatch('deleteNote', note.id)
     },
     async getNotes() {
-      await this.fetchNotes(1)
-      // console.log(this.notes, ' is notes fetched')
-      // setTimeout(() => {
-      this.notes = this.$store.getters.getNotes
-      console.log(this.notes, ' is notes fetched')
+      // console.log(localStorage.getItem('userid'), ' is the user id')
+      await this.fetchNotes(localStorage.getItem('userid'))
 
-      // }, 2000)
+      this.notes = this.$store.getters.getNotes
     },
 
     checkModal() {
@@ -145,6 +154,7 @@ export default {
     this.isNoteAdded = this.$store.getters.getAddState
     // console.log(this.isNoteAdded)
     this.getNotes()
+    // this.currentUserDetail = this.$store.getters.getCurrentUserDetail
   }
 }
 </script>

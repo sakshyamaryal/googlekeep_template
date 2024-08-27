@@ -10,6 +10,9 @@
         <li class="nav-item pull-right" v-if="!authStatus">
           <router-link to="/login" class="nav-link">Login</router-link>
         </li>
+        <li class="nav-item pull-right" v-if="role === 'admin'">
+          <router-link to="/users" class="nav-link">users</router-link>
+        </li>
         <li class="nav-item pull-right" v-if="!authStatus">
           <router-link to="/signup" class="nav-link">Sign Up</router-link>
         </li>
@@ -30,16 +33,23 @@ import { ref, watch } from 'vue'
 import {
   isAuthenticated,
   authStatus,
-  logout as performLogout
+  role,
+  logout as performLogout,
+  userrole,
+  addUserRole,
+  addUserID
 } from './components/auth/Authenticate'
+import { GET_USERROLE } from './store/storeConstants'
 
 export default {
   name: 'app',
   setup() {
     const authStatusRef = ref(isAuthenticated())
-
+    console.log(role, ' is the user role')
     const logout_user = () => {
       performLogout()
+      addUserRole('')
+      localStorage.setItem('userid', 0)
       this.$router.push('/login')
     }
 
@@ -49,8 +59,22 @@ export default {
 
     return {
       authStatus: authStatusRef,
-      logout_user
+      logout_user,
+      role
     }
+  },
+  data(){
+    return {
+      roleName: ''
+    }
+  },
+  methods:{
+    getUserRole() {
+      return this.$store.getters[`${GET_USERROLE}`]
+    }, 
+  },
+  mounted() {
+      console.log(this.getUserRole(), " is user role");
   }
 }
 </script>

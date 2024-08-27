@@ -47,9 +47,10 @@
 </template>
 
 <script>
+import { SET_USERROLE } from '../../store/storeConstants'
 // import axios from 'axios'
 import { mapActions } from 'vuex'
-import { login as performLogIn} from './Authenticate'
+import { login as performLogIn, addUserRole, addUserID } from './Authenticate'
 
 export default {
   name: 'login',
@@ -94,11 +95,15 @@ export default {
       if (this.$store.getters.getLoginstatus) {
         // console.log(this.$route.path('/home'));
         // return this.$route.path('/home')
-        performLogIn(this.$store.getters.getToken);
+        performLogIn(this.$store.getters.getToken)
+        addUserRole(this.$store.getters.getRole)
+        this.$store.commit(`${SET_USERROLE}`);
 
-        // console.log(localStorage.getItem('token'), " came from local storage");
+        // if (this.$store.getters.getCurrentUserId) {
+        //   addUserID(this.$store.getters.getCurrentUserId) 
+        // }
+
         return this.$router.push({ path: '/home' })
-        // this.$route.push({ path: '/home' })
       }
     }
   }

@@ -1,5 +1,8 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
+import {
+  SET_USERROLE,GET_USERROLE
+} from "./storeConstants";
 
 const store = createStore({
   state() {
@@ -9,9 +12,9 @@ const store = createStore({
       addstate: false,
       userDetails: [],
       loginStatus: false,
-      userDetails: [],
       token: '',
-      userRole: ''
+      userRole: '',
+      userid: 0
     }
   },
   getters: {
@@ -28,13 +31,28 @@ const store = createStore({
       return state.loginStatus
     },
 
+    getCurrentUserDetail(state) {
+      return state.userDetails
+    },
+
+    getRole(state) {
+      return state.userRole
+    },
+
     getToken(state) {
-      console.log(state.token, ' is token')
+      // console.log(state.token, ' is token')
       return state.token
+    },
+
+    getCurrentUserId(state) {
+      return state.userid
     },
 
     getUserDetails(state) {
       return state.userDetails
+    },
+    [GET_USERROLE](state) {
+        return state.userRole;
     }
   },
   mutations: {
@@ -43,14 +61,14 @@ const store = createStore({
     },
     ADD_NOTE(state, note) {
       state.notes.push(note)
-      console.log(note, ' while adding note')
+      // console.log(note, ' while adding note')
       if (note) {
         state.addstate = true
       }
     },
     UPDATE_NOTE(state, updatedNote) {
       const index = state.notes.findIndex((note) => note.id === updatedNote.id)
-      console.log(updatedNote, ' is the Note Updates')
+      // console.log(updatedNote, ' is the Note Updates')
       if (index !== -1) {
         state.notes.splice(index, 1, updatedNote)
       }
@@ -63,34 +81,39 @@ const store = createStore({
     },
     USER_REGISTRATION(state, userDetails) {
       state.userDetails.push(userDetails)
-      console.log(userDetails.success, ' success')
       if (userDetails.success) {
         state.loginStatus = true
         state.token = userDetails.token
-        console.log(userDetails.token, ' is the user token')
-        // localStorage.setItem('token', userDetails.token)
+        localStorage.setItem('token', userDetails.token)
+        state.userRole = userDetails.userRoleAndPermission[0].userrole
+        state.userid = userDetails.user.id
+        localStorage.setItem('userid',userDetails.user.id);
+        
       }
-      console.log(state.loginStatus, ' is the user registration')
     },
-
+    [SET_USERROLE](state, role) {
+        state.userRole = role
+    },
     USER_LOGIN(state, userDetails) {
       state.userDetails.push(userDetails)
-
       if (userDetails.success) {
         state.loginStatus = true
         state.token = userDetails.token
-        console.log(userDetails.token, ' is the user token from Login')
         localStorage.setItem('token', userDetails.token)
+        state.userRole = userDetails.userRoleAndPermission[0].userrole
+        state.userid = userDetails.user.id
+        localStorage.setItem('userid',userDetails.user.id);
       }
-      console.log(state.loginStatus, ' is the user login')
+      // console.log(state.loginStatus, ' is the user login')
     }
   },
   actions: {
     async fetchNotes({ commit }, userid) {
-      const response = await axios.get('http://localhost:8000/api/notes', userid)
+      console.log(userid)
+      const response = await axios.get(`http://localhost:8000/api/notes/${userid}`, userid)
       commit('SET_NOTES', response.data.data)
     },
-    
+
     async addNote({ commit }, note) {
       const response = await axios.post('http://localhost:8000/api/notes', note)
       commit('ADD_NOTE', response.data.data)
@@ -116,7 +139,7 @@ const store = createStore({
 
     async loginUser({ commit }, userDetails) {
       const response = await axios.post('http://localhost:8000/api/login', userDetails)
-      commit('USER_REGISTRATION', response.data)
+      commit('USER_LOGIN', response.data)
     }
   }
 })

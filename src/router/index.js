@@ -19,7 +19,16 @@ const routes = [
     path: '/signup',
     name: 'signup',
     component: () => import('../components/auth/Signup.vue')
-  }
+  },
+  {
+    path: '/users',
+    name: 'users',
+    component: () => import('../components/auth/Signup.vue'),
+    meta: {
+      requiresAuth: true 
+    }
+  },
+
 ]
 
 const router = createRouter({
