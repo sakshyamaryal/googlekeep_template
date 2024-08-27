@@ -1,5 +1,5 @@
 <template>
-    <fieldset class="form-container-notes" @click="editable = true">
+  <fieldset class="form-container-notes" @click="editNote">
     <div class="check-thumbtack">
       <!-- <svg style="height: 15px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg> -->
       <svg
@@ -20,8 +20,8 @@
         />
       </svg>
     </span>
-    <div class="title">Title</div>
-    <div class="text">Text</div>
+    <div class="title">{{ note.title }}</div>
+    <div class="text">{{ note.text }}</div>
     <div class="note-footer">
       <div style="width: 100%">
         <svg
@@ -92,9 +92,57 @@
 </template>
 
 <script>
-  export default {
-    data() {
-        editable: false
+export default {
+  props: {
+    note: Object,
+    user_id: Number,
+    noteid: Number
+  },
+  data() {
+    editable: false
+  },
+  methods: {
+    editNote() {
+      console.log(' Edit Note Triggered ');
+      this.$emit('edit-note', { title: this.note.title, text: this.note.text, id: this.note.id })
     }
-  };
-  </script>
+  },
+  mounted() {
+    console.log(this.note)
+  }
+}
+</script>
+
+<style>
+.form-container-notes {
+  background: #fff;
+  max-width: 220px;
+  box-shadow:
+    0 1px 2px 0 rgb(60 64 67 / 30%),
+    0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  border: 1px solid #1e201e;
+  border-radius: 8px;
+  padding: 7px;
+  margin: 10px;
+  height: max-content;
+}
+
+.check-circle {
+  background-color: rgb(149, 149, 149);
+  padding: 5px;
+  border-radius: 60%;
+  width: 30px;
+  margin-top: 0px;
+  margin-left: -15px;
+  /* background:white; */
+}
+
+.check-thumbtack {
+  float: right;
+  padding: 5px;
+}
+
+.flex-notes {
+  display: flex;
+}
+</style>

@@ -6,12 +6,26 @@
       @save-note="saveNote"
     />
 
-    <AddedNoteComponent
-      :note="note"
-      @edit-note="editNote"
-      @delete-note="deleteNote"
-      :editable="isEditing"
-    />
+    <div class="flex-notes">
+      <AddedNoteComponent
+        v-for="(note, index) in notes"
+        :key="index"
+        :note="note"
+        @edit-note="editNote"
+        @delete-note="deleteNote"
+        :noteid="note.id"
+        :user_id="note.user_id"
+        :editable="isEditing"
+      />
+    </div>
+
+    
+  </div>
+
+  <div>
+    <b-button @click="modalShow = !modalShow">Open Modal</b-button>
+
+    <b-modal v-model="modalShow">Hello From Modal!</b-modal>
   </div>
 </template>
 
@@ -31,9 +45,11 @@ export default {
       noteContent: '',
       isEditing: false,
       noteId: null,
-      // notes: [],
+      notes: [],
       clickedInput: false,
-      isNoteAdded: false
+      isNoteAdded: false,
+      modalShow: false
+
     }
   },
   methods: {
@@ -73,6 +89,7 @@ export default {
       this.noteId = null
     },
     editNote(note) {
+      console.log(note)
       this.noteTitle = note.title
       this.noteContent = note.text
       this.isEditing = true
@@ -80,11 +97,22 @@ export default {
     },
     async deleteNote(note) {
       await this.$store.dispatch('deleteNote', note.id)
-    }
+    },
+    async getNotes() {
+      await this.fetchNotes(1)
+      // console.log(this.notes, ' is notes fetched')
+      // setTimeout(() => {
+      this.notes = this.$store.getters.getNotes
+      console.log(this.notes, ' is notes fetched')
+
+      // }, 2000)
+    },
+    
   },
   mounted() {
     this.isNoteAdded = this.$store.getters.getAddState
-    console.log(this.isNoteAdded)
+    // console.log(this.isNoteAdded)
+    this.getNotes()
   }
 }
 </script>
@@ -115,34 +143,7 @@ export default {
   border-radius: 8px;
 }
 
-.form-container-notes {
-  background: #fff;
-  max-width: 220px;
-  /* margin: 32px auto; */
-  box-shadow:
-    0 1px 2px 0 rgb(60 64 67 / 30%),
-    0 2px 6px 2px rgba(0, 0, 0, 0.15);
-  border: 1px solid #1e201e;
-  border-radius: 8px;
-  padding: 7px;
-}
-
 .contents-icon {
   display: flex;
-}
-
-.check-circle {
-  background-color: rgb(149, 149, 149);
-  padding: 5px;
-  border-radius: 60%;
-  width: 30px;
-  margin-top: 0px;
-  margin-left: -15px;
-  /* background:white; */
-}
-
-.check-thumbtack {
-  float: right;
-  padding: 5px;
 }
 </style>

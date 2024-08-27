@@ -10,13 +10,17 @@ const store = createStore({
       userDetails: [],
       loginStatus: false,
       userDetails: [],
-      token: '',
+      token: ''
     }
   },
   getters: {
     getAddState(state, note) {
       return state.addstate
       // console.log(note.data);
+    },
+
+    getNotes(state) {
+      return state.notes
     },
 
     getLoginstatus(state) {
@@ -79,13 +83,13 @@ const store = createStore({
     }
   },
   actions: {
-    async fetchNotes({ commit }) {
-      const response = await axios.get('http://localhost:8000/api/notes')
-      commit('SET_NOTES', response.data)
+    async fetchNotes({ commit }, userid) {
+      const response = await axios.get('http://localhost:8000/api/notes', userid)
+      commit('SET_NOTES', response.data.data)
     },
     async addNote({ commit }, note) {
       const response = await axios.post('http://localhost:8000/api/notes', note)
-      commit('ADD_NOTE', response.data)
+      commit('ADD_NOTE', response.data.data)
       if (response.data.success) {
         commit('CLEAR_CURRENT_NOTE')
       }
