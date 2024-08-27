@@ -20,7 +20,7 @@
         />
       </svg>
     </span>
-    <div class="title">{{ note.title }}</div>
+    <div class="title" style="word-wrap: break-word">{{ note.title }}</div>
     <div class="text">{{ note.text }}</div>
     <div class="note-footer">
       <div style="width: 100%">
@@ -103,7 +103,7 @@ export default {
   },
   methods: {
     editNote() {
-      console.log(' Edit Note Triggered ');
+      console.log(' Edit Note Triggered ')
       this.$emit('edit-note', { title: this.note.title, text: this.note.text, id: this.note.id })
     }
   },
@@ -120,7 +120,7 @@ export default {
   box-shadow:
     0 1px 2px 0 rgb(60 64 67 / 30%),
     0 2px 6px 2px rgba(0, 0, 0, 0.15);
-  border: 1px solid #1e201e;
+  /* border: 1px solid #1e201e; */
   border-radius: 8px;
   padding: 7px;
   margin: 10px;
@@ -144,5 +144,6 @@ export default {
 
 .flex-notes {
   display: flex;
+  flex-wrap: wrap;
 }
 </style>

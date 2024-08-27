@@ -102,7 +102,6 @@
 </template>
 
 <script>
-
 export default {
   props: {
     note: {

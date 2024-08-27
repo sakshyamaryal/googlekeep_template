@@ -10,7 +10,8 @@ const store = createStore({
       userDetails: [],
       loginStatus: false,
       userDetails: [],
-      token: ''
+      token: '',
+      userRole: ''
     }
   },
   getters: {
@@ -42,12 +43,14 @@ const store = createStore({
     },
     ADD_NOTE(state, note) {
       state.notes.push(note)
-      if (note.success) {
+      console.log(note, ' while adding note')
+      if (note) {
         state.addstate = true
       }
     },
     UPDATE_NOTE(state, updatedNote) {
       const index = state.notes.findIndex((note) => note.id === updatedNote.id)
+      console.log(updatedNote, ' is the Note Updates')
       if (index !== -1) {
         state.notes.splice(index, 1, updatedNote)
       }
@@ -87,6 +90,7 @@ const store = createStore({
       const response = await axios.get('http://localhost:8000/api/notes', userid)
       commit('SET_NOTES', response.data.data)
     },
+    
     async addNote({ commit }, note) {
       const response = await axios.post('http://localhost:8000/api/notes', note)
       commit('ADD_NOTE', response.data.data)
@@ -94,10 +98,12 @@ const store = createStore({
         commit('CLEAR_CURRENT_NOTE')
       }
     },
+
     async updateNote({ commit }, note) {
       const response = await axios.put(`http://localhost:8000/api/notes/${note.id}`, note)
-      commit('UPDATE_NOTE', response.data)
+      commit('UPDATE_NOTE', response.data.data)
     },
+
     async deleteNote({ commit }, id) {
       await axios.delete(`http://localhost:8000/api/notes/${id}`)
       commit('DELETE_NOTE', id)

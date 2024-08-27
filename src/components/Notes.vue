@@ -13,31 +13,45 @@
         :note="note"
         @edit-note="editNote"
         @delete-note="deleteNote"
-        :noteid="note.id"
+        @click="getNoteContent(note.id, note.title, note.text)"
+        :data-noteid="note.id"
+        :noteContent = noteContent
+        :noteTitle = noteTitle
         :user_id="note.user_id"
         :editable="isEditing"
       />
     </div>
-
-    
   </div>
 
-  <div>
-    <b-button @click="modalShow = !modalShow">Open Modal</b-button>
-
-    <b-modal v-model="modalShow">Hello From Modal!</b-modal>
-  </div>
+  <Modal :visible="showModal" @updateNote="update">
+    <template v-slot:header>
+      <input type="text" class="form-control border-0 shadow-none" v-model="noteTitle" />
+    </template>
+    <template v-slot:body>
+      <textarea
+        class="form-control border-0 shadow-none"
+        v-model="noteContent"
+        maxLength="160"
+        style="resize: none"
+      ></textarea>
+      <Icon :onClose="checkModal"></Icon>
+    </template>
+  </Modal>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import FormComponent from './Reusable/FormComponent.vue'
 import AddedNoteComponent from './Reusable/AddedNoteComponent.vue'
+import Modal from './Reusable/Modal.vue'
+import Icon from './icons/Icons.vue'
 
 export default {
   components: {
     FormComponent,
-    AddedNoteComponent
+    AddedNoteComponent,
+    Modal,
+    Icon
   },
   data() {
     return {
@@ -48,8 +62,7 @@ export default {
       notes: [],
       clickedInput: false,
       isNoteAdded: false,
-      modalShow: false
-
+      showModal: false
     }
   },
   methods: {
@@ -72,15 +85,20 @@ export default {
         } else {
           await this.addNote(updatedNote)
           this.isNoteAdded = this.$store.getters.getAddState
-          console.log(this.isNoteAdded, ' comes from parent')
-          // console.log(note, " note");
-          // if (this.isNoteAdded == true) {
-          //   this.isNoteAdded = false
-          // }
         }
 
         this.resetForm()
       }
+    },
+    update() {
+      alert('update called')
+      const note = {
+        title: this.noteTitle,
+        text: this.noteContent,
+        id: this.noteId
+      }
+      this.saveNote(note)
+      this.checkModal();
     },
     resetForm() {
       this.noteTitle = ''
@@ -89,7 +107,6 @@ export default {
       this.noteId = null
     },
     editNote(note) {
-      console.log(note)
       this.noteTitle = note.title
       this.noteContent = note.text
       this.isEditing = true
@@ -107,7 +124,22 @@ export default {
 
       // }, 2000)
     },
-    
+
+    checkModal() {
+      if (this.showModal) {
+        this.showModal = false
+      } else {
+        this.showModal = true
+      }
+    },
+
+    getNoteContent(noteid, title, text) {
+      this.showModal = true
+      this.noteContent = text
+      this.noteTitle = title
+
+      console.log(text)
+    }
   },
   mounted() {
     this.isNoteAdded = this.$store.getters.getAddState
