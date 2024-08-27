@@ -6,13 +6,30 @@ const store = createStore({
     return {
       notes: [],
       currentNote: { title: '', text: '' },
-      addstate: false
+      addstate: false,
+      userDetails: [],
+      loginStatus: false,
+      userDetails: [],
+      token: '',
     }
   },
   getters: {
     getAddState(state, note) {
       return state.addstate
       // console.log(note.data);
+    },
+
+    getLoginstatus(state) {
+      return state.loginStatus
+    },
+
+    getToken(state) {
+      console.log(state.token, ' is token')
+      return state.token
+    },
+
+    getUserDetails(state) {
+      return state.userDetails
     }
   },
   mutations: {
@@ -36,6 +53,29 @@ const store = createStore({
     },
     CLEAR_CURRENT_NOTE(state) {
       state.currentNote = { title: '', text: '' }
+    },
+    USER_REGISTRATION(state, userDetails) {
+      state.userDetails.push(userDetails)
+      console.log(userDetails.success, ' success')
+      if (userDetails.success) {
+        state.loginStatus = true
+        state.token = userDetails.token
+        console.log(userDetails.token, ' is the user token')
+        // localStorage.setItem('token', userDetails.token)
+      }
+      console.log(state.loginStatus, ' is the user registration')
+    },
+
+    USER_LOGIN(state, userDetails) {
+      state.userDetails.push(userDetails)
+
+      if (userDetails.success) {
+        state.loginStatus = true
+        state.token = userDetails.token
+        console.log(userDetails.token, ' is the user token from Login')
+        localStorage.setItem('token', userDetails.token)
+      }
+      console.log(state.loginStatus, ' is the user login')
     }
   },
   actions: {
@@ -57,6 +97,16 @@ const store = createStore({
     async deleteNote({ commit }, id) {
       await axios.delete(`http://localhost:8000/api/notes/${id}`)
       commit('DELETE_NOTE', id)
+    },
+
+    async addUser({ commit }, userDetails) {
+      const response = await axios.post('http://localhost:8000/api/register', userDetails)
+      commit('USER_REGISTRATION', response.data)
+    },
+
+    async loginUser({ commit }, userDetails) {
+      const response = await axios.post('http://localhost:8000/api/login', userDetails)
+      commit('USER_REGISTRATION', response.data)
     }
   }
 })

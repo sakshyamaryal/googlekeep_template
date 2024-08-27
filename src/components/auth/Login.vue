@@ -47,8 +47,9 @@
 </template>
 
 <script>
-import axios from 'axios'
-import {login as performLogIn} from './Authenticate'
+// import axios from 'axios'
+import { mapActions } from 'vuex'
+import { login as performLogIn} from './Authenticate'
 
 export default {
   name: 'login',
@@ -61,24 +62,44 @@ export default {
     }
   },
   methods: {
+    // async login() {
+    //   var data = {
+    //     email: this.user.email,
+    //     password: this.user.password
+    //   }
+
+    //   await axios
+    //     .post('http://localhost:8000/api/login', data)
+    //     .then((response) => {
+    //       console.log(response.data.token)
+    //       sessionStorage.setItem('token', response.data.token)
+    //       // localStorage.setItem('token',token);
+    //       performLogIn(response.data.token)
+
+    //     })
+    //     .catch((errorMessages) => {
+    //       console.log(errorMessages)
+    //     })
+    // }
+    ...mapActions(['loginUser']),
+
     async login() {
       var data = {
         email: this.user.email,
         password: this.user.password
       }
 
-      await axios
-        .post('http://localhost:8000/api/login', data)
-        .then((response) => {
-          console.log(response.data.token)
-          sessionStorage.setItem('token', response.data.token)
-          // localStorage.setItem('token',token);
-          performLogIn(response.data.token)
+      await this.loginUser(data)
 
-        })
-        .catch((errorMessages) => {
-          console.log(errorMessages)
-        })
+      if (this.$store.getters.getLoginstatus) {
+        // console.log(this.$route.path('/home'));
+        // return this.$route.path('/home')
+        performLogIn(this.$store.getters.getToken);
+
+        // console.log(localStorage.getItem('token'), " came from local storage");
+        return this.$router.push({ path: '/home' })
+        // this.$route.push({ path: '/home' })
+      }
     }
   }
 }

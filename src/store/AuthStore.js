@@ -14,12 +14,19 @@ const authStore = createStore({
       return state.loginStatus;
     },
 
+    getToken(state) {
+        return state.token;
+    },
+
+    getUserDetails(state){
+        return state.userDetails;
+    }
+
   },
   mutations: {
     USER_REGISTRATION(state, userDetails) {
       state.userDetails.push(userDetails)
       console.log(userDetails.success, " success");
-
       if (userDetails.success) {
         state.loginStatus = true
       }

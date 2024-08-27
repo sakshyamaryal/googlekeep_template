@@ -7,8 +7,15 @@ export function isAuthenticated(){
 }
 
 export function login(token){
+    console.log("login performed");
     localStorage.setItem('token',token);
+
     authStatus.value = true;
+}
+
+export function logout() {
+    localStorage.removeItem('token');
+    authStatus.value = false;
 }
 
 export {authStatus};

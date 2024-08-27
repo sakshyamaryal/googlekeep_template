@@ -76,6 +76,7 @@
 <script>
 // import axios from 'axios'
 import { mapActions, mapGetters } from 'vuex'
+import { login as performLogIn} from './Authenticate'
 
 export default {
   name: 'Signup',
@@ -114,22 +115,21 @@ export default {
     // }
 
     ...mapActions(['addUser']),
-    ...mapGetters(['getLoginstatus']),
 
     async registerUser() {
       var data = {
         name: this.user.name,
         email: this.user.email,
         password: this.user.password
-      };
+      }
 
-      var confirmPass = this.user.confirmpassword;
+      var confirmPass = this.user.confirmpassword
 
       if (data.password === confirmPass) {
         await this.addUser(data)
+        performLogIn(this.$store.getters.getToken);
 
-        console.log(this.submitted);
-
+        console.log(this.$store.getters.getLoginstatus, ' is the login status')
       } else {
         alert('The Confirm Password Must Match Password Field')
         return false
@@ -137,7 +137,7 @@ export default {
     }
   },
   mounted() {
-    this.submitted = this.$authStore.getters.getLoginstatus
+    this.submitted = this.$store.getters.getLoginstatus
   }
 }
 </script>

@@ -1,25 +1,45 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createWebHistory, createRouter } from 'vue-router'
+import { isAuthenticated } from '../components/auth/Authenticate'
+
+const routes = [
+  {
+    path: '/home',
+    name: 'todo',
+    component: () => import('../components/Notes.vue'),
+    meta: {
+      requiresAuth: true // Add meta field to indicate protected route
+    }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('../components/auth/Login.vue')
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: () => import('../components/auth/Signup.vue')
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/home',
-      name: 'todo',
-      component: () => import('../components/Notes.vue')
-      // component: HomeView
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('../components/auth/Login.vue')
-    },
-    {
-      path: '/signup',
-      name: 'signup',
-      component: () => import('../components/auth/Signup.vue')
+  routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!isAuthenticated()) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
     }
-  ]
+  } else {
+    next()
+  }
 })
 
 export default router
