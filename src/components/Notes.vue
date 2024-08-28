@@ -31,7 +31,7 @@
       <textarea
         class="form-control border-0 shadow-none"
         v-model="noteContent"
-        maxLength="160"
+        maxLength="700"
         style="resize: none"
       ></textarea>
       <Icon :onClose="checkModal"></Icon>
@@ -137,6 +137,8 @@ export default {
     checkModal() {
       if (this.showModal) {
         this.showModal = false
+        this.noteId = 0;
+        this.isEditing = false;
       } else {
         this.showModal = true
       }

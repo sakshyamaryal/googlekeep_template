@@ -3,6 +3,7 @@ import axios from 'axios'
 import {
   SET_USERROLE,GET_USERROLE
 } from "./storeConstants";
+import { login as performLogIn, addUserRole, addUserID } from '../components/auth/Authenticate'
 
 const store = createStore({
   state() {
@@ -84,28 +85,43 @@ const store = createStore({
       if (userDetails.success) {
         state.loginStatus = true
         state.token = userDetails.token
-        localStorage.setItem('token', userDetails.token)
-        state.userRole = userDetails.userRoleAndPermission[0].userrole
+        // localStorage.setItem('token', userDetails.token)
+        // state.userRole = userDetails.userRoleAndPermission[0].userrole
         state.userid = userDetails.user.id
-        localStorage.setItem('userid',userDetails.user.id);
-        
+        // localStorage.setItem('userid',userDetails.user.id);
       }
     },
     [SET_USERROLE](state, role) {
         state.userRole = role
     },
+    // USER_LOGIN(state, userDetails) {
+    //   state.userDetails.push(userDetails)
+    //   if (userDetails.success) {
+    //     state.loginStatus = true
+    //     state.token = userDetails.token
+    //     localStorage.setItem('token', userDetails.token)
+    //     state.userRole = userDetails.userRoleAndPermission[0].userrole
+    //     state.userid = userDetails.user.id
+    //     localStorage.setItem('userid',userDetails.user.id);
+    //   }
+    //   // console.log(state.loginStatus, ' is the user login')
+    // }
     USER_LOGIN(state, userDetails) {
-      state.userDetails.push(userDetails)
       if (userDetails.success) {
-        state.loginStatus = true
-        state.token = userDetails.token
-        localStorage.setItem('token', userDetails.token)
-        state.userRole = userDetails.userRoleAndPermission[0].userrole
-        state.userid = userDetails.user.id
-        localStorage.setItem('userid',userDetails.user.id);
+        state.userDetails = userDetails.user; 
+        state.loginStatus = true;
+        state.token = userDetails.token;
+        localStorage.setItem('token', userDetails.token);
+        state.userRole = userDetails.roles[0]; 
+        state.userid = userDetails.user.id;
+        localStorage.setItem('userid', userDetails.user.id);
+      } else {
+        state.loginStatus = false;
+        state.token = '';
+        state.userRole = '';
+        state.userid = 0;
       }
-      // console.log(state.loginStatus, ' is the user login')
-    }
+    },
   },
   actions: {
     async fetchNotes({ commit }, userid) {

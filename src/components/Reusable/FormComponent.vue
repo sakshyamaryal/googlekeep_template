@@ -27,7 +27,7 @@
         class="form-control border-0 shadow-none"
         placeholder="Take a note..."
         v-model="text"
-        maxLength="160"
+        maxLength="700"
         style="resize: none"
       ></textarea>
       <div class="contents-icon">

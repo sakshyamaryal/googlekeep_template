@@ -76,7 +76,7 @@
 <script>
 // import axios from 'axios'
 import { mapActions, mapGetters } from 'vuex'
-import { login as performLogIn} from './Authenticate'
+import { login as performLogIn } from './Authenticate'
 
 export default {
   name: 'Signup',
@@ -127,8 +127,12 @@ export default {
 
       if (data.password === confirmPass) {
         await this.addUser(data)
-        performLogIn(this.$store.getters.getToken);
-
+        // performLogIn(this.$store.getters.getToken);
+        if (this.$store.getters.getLoginstatus) {
+          alert('registration successfull')
+          this.$router.push({ path: '/login' })
+        }        
+        
         console.log(this.$store.getters.getLoginstatus, ' is the login status')
       } else {
         alert('The Confirm Password Must Match Password Field')

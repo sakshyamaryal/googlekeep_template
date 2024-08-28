@@ -95,6 +95,7 @@ export default {
       if (this.$store.getters.getLoginstatus) {
         // console.log(this.$route.path('/home'));
         // return this.$route.path('/home')
+        console.log(this.$store.getters.getRole, " is the role");
         performLogIn(this.$store.getters.getToken)
         addUserRole(this.$store.getters.getRole)
         this.$store.commit(`${SET_USERROLE}`);

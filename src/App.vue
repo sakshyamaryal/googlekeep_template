@@ -10,7 +10,7 @@
         <li class="nav-item pull-right" v-if="!authStatus">
           <router-link to="/login" class="nav-link">Login</router-link>
         </li>
-        <li class="nav-item pull-right" v-if="authrole === 'admin'">
+        <li class="nav-item pull-right" v-if="role === 'admin'">
           <router-link to="/users" class="nav-link">users</router-link>
         </li>
         <li class="nav-item pull-right" v-if="!authStatus">
@@ -58,14 +58,15 @@ export default {
       authStatusRef.value = newStatus
     })
 
-    watch(role, (newRole) => {
+    watch(() => role.value, (newRole) => {
       authrole.value = newRole
     })
+
 
     return {
       authStatus: authStatusRef,
       logout_user,
-      authrole
+      role:authrole
     }
   },
   data() {
