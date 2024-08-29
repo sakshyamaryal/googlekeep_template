@@ -5,7 +5,7 @@
       :note="{ title: noteTitle, text: noteContent }"
       @save-note="saveNote"
     />
-
+    <br>
     <div class="flex-notes">
       <AddedNoteComponent
         v-for="(note, index) in notes"
@@ -88,6 +88,7 @@ export default {
         if (this.noteId) {
           updatedNote.id = this.noteId
           this.isEditing = true
+          updatedNote.user_id = localStorage.getItem('userid')
         } else {
           updatedNote.user_id = localStorage.getItem('userid')
         }

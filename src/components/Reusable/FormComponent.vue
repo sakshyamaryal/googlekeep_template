@@ -1,5 +1,10 @@
 <template>
-  <div class="form-container active-form" v-click-outside="saveNote">
+  <div
+    class="form-container active-form"
+    v-click-outside="saveNote"
+    @mouseover="upHere = true"
+    @mouseleave="upHere = false"
+  >
     <form ref="noteForm" id="todo-box" @click="clickedInput = true">
       <div class="contents-icon">
         <br />
@@ -33,6 +38,7 @@
       <div class="contents-icon">
         <div style="width: 100%">
           <svg
+            v-show="upHere"
             style="height: 20px; margin-left: 20px"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 448 512"
@@ -43,6 +49,7 @@
             />
           </svg>
           <svg
+            v-show="upHere"
             style="height: 20px; margin-left: 20px"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 640 512"
@@ -53,6 +60,7 @@
             />
           </svg>
           <svg
+            v-show="upHere"
             style="height: 20px; margin-left: 20px"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
@@ -63,6 +71,7 @@
             />
           </svg>
           <svg
+            v-show="upHere"
             style="height: 20px; margin-left: 20px"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
@@ -74,6 +83,7 @@
           </svg>
 
           <svg
+            v-show="upHere"
             style="height: 20px; margin-left: 20px"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
@@ -85,6 +95,7 @@
           </svg>
 
           <svg
+            v-show="upHere"
             style="height: 20px; margin-left: 20px"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 192 512"
@@ -116,7 +127,8 @@ export default {
     return {
       title: this.note.title || '',
       text: this.note.text || '',
-      clickedInput: false
+      clickedInput: false,
+      upHere: false
     }
   },
   methods: {

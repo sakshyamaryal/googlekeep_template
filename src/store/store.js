@@ -132,7 +132,13 @@ const store = createStore({
 
     async addNote({ commit }, note) {
       const response = await axios.post('http://localhost:8000/api/notes', note)
-      commit('ADD_NOTE', response.data.data)
+
+      if (response.data.data === 'permissionismissing') {
+        alert(" User Doesnot Have Add Role ");
+      }else{
+        commit('ADD_NOTE', response.data.data)
+      }
+     
       if (response.data.success) {
         commit('CLEAR_CURRENT_NOTE')
       }
@@ -140,7 +146,12 @@ const store = createStore({
 
     async updateNote({ commit }, note) {
       const response = await axios.put(`http://localhost:8000/api/notes/${note.id}`, note)
-      commit('UPDATE_NOTE', response.data.data)
+      if (response.data.data === 'permissionismissing') {
+        alert(" User Doesnot Have Update Role ");
+      }else{
+        commit('UPDATE_NOTE', response.data.data)
+      }
+     
     },
 
     async deleteNote({ commit }, id) {
