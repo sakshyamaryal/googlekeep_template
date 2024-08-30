@@ -114,7 +114,7 @@
             />
           </svg>
         </div>
-        <div class="pull-right">Close</div>
+        <!-- <div class="pull-right">Close</div> -->
       </div>
     </form>
   </div>
@@ -142,6 +142,7 @@ export default {
   methods: {
     saveNote() {
       this.$emit('save-note', { title: this.title, text: this.text })
+      this.clickedInput = false;
       setTimeout(() => {
         if (this.isNoteAdded) {
           this.$refs.noteForm.reset()

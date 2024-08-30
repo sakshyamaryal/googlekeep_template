@@ -7,6 +7,7 @@
     />
     <br />
     <div class="flex-notes">
+      <!-- <draggable v-model="notes" @start="drag = true" @end="drag = false"> -->
       <AddedNoteComponent
         v-for="(note, index) in notes"
         :key="index"
@@ -19,7 +20,11 @@
         :noteTitle="noteTitle"
         :user_id="note.user_id"
         :editable="isEditing"
+        @mousedown="startDrag($event, index)"
+        @mousemove="dragging($event, index)"
+        @mouseup="endDrag($event, index)"
       />
+      <!-- </draggable> -->
     </div>
   </div>
 
@@ -47,6 +52,7 @@ import AddedNoteComponent from './Reusable/AddedNoteComponent.vue'
 import Modal from './Reusable/Modal.vue'
 import Icon from './icons/Icons.vue'
 import { ref, watch } from 'vue'
+// import draggable from 'vuedraggable';
 // import { userId  } from './auth/Authenticate'
 
 export default {
@@ -62,6 +68,7 @@ export default {
     AddedNoteComponent,
     Modal,
     Icon
+    // draggable,
   },
   data() {
     return {
@@ -73,7 +80,11 @@ export default {
       clickedInput: false,
       isNoteAdded: false,
       showModal: false,
-      currentUserDetail: []
+      currentUserDetail: [],
+      drag: false,
+      dragIndex: null,
+      dragOffsetX: 0,
+      dragOffsetY: 0
     }
   },
   methods: {
@@ -173,6 +184,28 @@ export default {
       this.noteTitle = title
 
       console.log(text)
+    },
+    startDrag(event, index) {
+      this.dragIndex = index
+      this.dragOffsetX = event.clientX
+      this.dragOffsetY = event.clientY
+    },
+    dragging(event) {
+      if (this.dragIndex !== null) {
+        const newIndex = this.notes.findIndex((note, i) => {
+          const rect = event.target.getBoundingClientRect()
+          const x = event.clientX - rect.left
+          const y = event.clientY - rect.top
+          return x > 0 && x < rect.width && y > 0 && y < rect.height
+        })
+        if (newIndex !== -1 && newIndex !== this.dragIndex) {
+          this.notes.splice(newIndex, 0, this.notes.splice(this.dragIndex, 1)[0])
+          this.dragIndex = newIndex
+        }
+      }
+    },
+    endDrag() {
+      this.dragIndex = null
     }
   },
   mounted() {
@@ -212,5 +245,19 @@ export default {
 
 .contents-icon {
   display: flex;
+}
+
+.flex-notes {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.draggable {
+  cursor: move;
+}
+
+.draggable:hover {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
 }
 </style>
