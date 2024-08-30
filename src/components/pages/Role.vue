@@ -33,10 +33,11 @@
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th scope="col">#</th>
+                <th scope="col">ID</th>
                 <th scope="col">Role</th>
                 <th scope="col">Edit Permission</th>
                 <th scope="col">Add Permission</th>
+                <th scope="col">Delete Permission</th>
               </tr>
             </thead>
             <tbody>
@@ -55,6 +56,13 @@
                     type="checkbox"
                     :checked="role.permissions.includes('add')"
                     @change="updatePermission(role.id, 'add', $event.target.checked)"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    :checked="role.permissions.includes('delete')"
+                    @change="updatePermission(role.id, 'delete', $event.target.checked)"
                   />
                 </td>
               </tr>
@@ -108,6 +116,7 @@
           })
           this.roles.push(response.data.data)
           this.newRoleName = ''
+          console.log(this.roles);
         } catch (error) {
           console.log(error)
         }

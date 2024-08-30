@@ -51,6 +51,7 @@ export default {
       performLogout()
       addUserRole('')
       localStorage.setItem('userid', 0)
+      sessionStorage.setItem('userid', 0)
       this.$router.push('/login')
     }
 
@@ -58,15 +59,17 @@ export default {
       authStatusRef.value = newStatus
     })
 
-    watch(() => role.value, (newRole) => {
-      authrole.value = newRole
-    })
-
+    watch(
+      () => role.value,
+      (newRole) => {
+        authrole.value = newRole
+      }
+    )
 
     return {
       authStatus: authStatusRef,
       logout_user,
-      role:authrole
+      role: authrole
     }
   },
   data() {

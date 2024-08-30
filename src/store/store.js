@@ -1,8 +1,6 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
-import {
-  SET_USERROLE,GET_USERROLE
-} from "./storeConstants";
+import { SET_USERROLE, GET_USERROLE } from './storeConstants'
 import { login as performLogIn, addUserRole, addUserID } from '../components/auth/Authenticate'
 
 const store = createStore({
@@ -53,7 +51,7 @@ const store = createStore({
       return state.userDetails
     },
     [GET_USERROLE](state) {
-        return state.userRole;
+      return state.userRole
     }
   },
   mutations: {
@@ -74,8 +72,8 @@ const store = createStore({
         state.notes.splice(index, 1, updatedNote)
       }
     },
-    DELETE_NOTE(state, id) {
-      state.notes = state.notes.filter((note) => note.id !== id)
+    DELETE_NOTE(state, deletenote) {
+      state.notes = state.notes.filter((note) => note.id !== deletenote.id)
     },
     CLEAR_CURRENT_NOTE(state) {
       state.currentNote = { title: '', text: '' }
@@ -92,7 +90,7 @@ const store = createStore({
       }
     },
     [SET_USERROLE](state, role) {
-        state.userRole = role
+      state.userRole = role
     },
     // USER_LOGIN(state, userDetails) {
     //   state.userDetails.push(userDetails)
@@ -108,20 +106,21 @@ const store = createStore({
     // }
     USER_LOGIN(state, userDetails) {
       if (userDetails.success) {
-        state.userDetails = userDetails.user; 
-        state.loginStatus = true;
-        state.token = userDetails.token;
-        localStorage.setItem('token', userDetails.token);
-        state.userRole = userDetails.roles[0]; 
-        state.userid = userDetails.user.id;
-        localStorage.setItem('userid', userDetails.user.id);
+        state.userDetails = userDetails.user
+        state.loginStatus = true
+        state.token = userDetails.token
+        localStorage.setItem('token', userDetails.token)
+        state.userRole = userDetails.roles[0]
+        state.userid = userDetails.user.id
+        localStorage.setItem('userid', userDetails.user.id)
+        sessionStorage.setItem('userid', userDetails.user.id)
       } else {
-        state.loginStatus = false;
-        state.token = '';
-        state.userRole = '';
-        state.userid = 0;
+        state.loginStatus = false
+        state.token = ''
+        state.userRole = ''
+        state.userid = 0
       }
-    },
+    }
   },
   actions: {
     async fetchNotes({ commit }, userid) {
@@ -134,11 +133,11 @@ const store = createStore({
       const response = await axios.post('http://localhost:8000/api/notes', note)
 
       if (response.data.data === 'permissionismissing') {
-        alert(" User Doesnot Have Add Role ");
-      }else{
+        alert(' User Doesnot Have Add Role ')
+      } else {
         commit('ADD_NOTE', response.data.data)
       }
-     
+
       if (response.data.success) {
         commit('CLEAR_CURRENT_NOTE')
       }
@@ -147,16 +146,19 @@ const store = createStore({
     async updateNote({ commit }, note) {
       const response = await axios.put(`http://localhost:8000/api/notes/${note.id}`, note)
       if (response.data.data === 'permissionismissing') {
-        alert(" User Doesnot Have Update Role ");
-      }else{
+        alert(' User Doesnot Have Update Role ')
+      } else {
         commit('UPDATE_NOTE', response.data.data)
       }
-     
     },
 
-    async deleteNote({ commit }, id) {
-      await axios.delete(`http://localhost:8000/api/notes/${id}`)
-      commit('DELETE_NOTE', id)
+    async deleteNote({ commit }, deletenote) {
+      const response = await axios.delete(`http://localhost:8000/api/notes/${deletenote.id}/${deletenote.user_id}`)
+      if (response.data.data === 'permissionismissing') {
+        alert('User Doesnot have Delete Permission')
+      } else {
+        commit('DELETE_NOTE', deletenote.id)
+      }
     },
 
     async addUser({ commit }, userDetails) {

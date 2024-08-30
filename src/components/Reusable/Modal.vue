@@ -80,13 +80,14 @@ input,
 textarea,
 select {
   width: 100%;
+  /* height: 100%; */
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 0.25rem;
 }
 
 textarea {
-  resize: vertical;
+  /* resize: vertical; */
   min-height: 100px;
 }
 

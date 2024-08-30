@@ -5,7 +5,7 @@
       :note="{ title: noteTitle, text: noteContent }"
       @save-note="saveNote"
     />
-    <br>
+    <br />
     <div class="flex-notes">
       <AddedNoteComponent
         v-for="(note, index) in notes"
@@ -33,8 +33,9 @@
         v-model="noteContent"
         maxLength="700"
         style="resize: none"
+        :rows="calculateRows(noteContent)"
       ></textarea>
-      <Icon :onClose="checkModal"></Icon>
+      <Icon :onClose="checkModal" @deleteNote="deleteNote"></Icon>
     </template>
   </Modal>
 </template>
@@ -77,6 +78,11 @@ export default {
   },
   methods: {
     ...mapActions(['addNote', 'updateNote', 'fetchNotes']),
+    calculateRows(content) {
+      const words = content.split(' ');
+      const rows = Math.ceil(words.length / 10);
+      return rows;
+    },
     async saveNote(note) {
       console.log('Saving Note:', note.title, note.text)
       if (note.text) {
@@ -119,14 +125,30 @@ export default {
       this.isEditing = false
       this.noteId = null
     },
+    // delete() {
+    //   alert('delete called')
+    //   const note = {
+    //     title: this.noteTitle,
+    //     text: this.noteContent,
+    //     id: this.noteId
+    //   }
+    //   console.log(note)
+    // },
     editNote(note) {
       this.noteTitle = note.title
       this.noteContent = note.text
       this.isEditing = true
       this.noteId = note.id
     },
-    async deleteNote(note) {
-      await this.$store.dispatch('deleteNote', note.id)
+    async deleteNote() {
+      const notedetails = {
+        id: this.noteId,
+        user_id: localStorage.getItem('userid')
+      }
+
+      await this.$store.dispatch('deleteNote', notedetails)
+      this.getNotes()
+      this.checkModal()
     },
     async getNotes() {
       // console.log(localStorage.getItem('userid'), ' is the user id')
@@ -138,8 +160,8 @@ export default {
     checkModal() {
       if (this.showModal) {
         this.showModal = false
-        this.noteId = 0;
-        this.isEditing = false;
+        this.noteId = 0
+        this.isEditing = false
       } else {
         this.showModal = true
       }

@@ -1,6 +1,6 @@
 <template>
     <div class="container mt-4">
-      <h2 class="mb-4">User Management</h2>
+      <!-- <h2 class="mb-4">User Management</h2> -->
       <router-link to="/role" class="btn btn-danger mb-4">
         Manage Roles And Privellege
       </router-link>
@@ -13,7 +13,7 @@
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th scope="col">#</th>
+                <th scope="col">ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Current Role</th>
