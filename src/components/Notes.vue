@@ -25,7 +25,7 @@
 
   <Modal :visible="showModal" @updateNote="update">
     <template v-slot:header>
-      <input type="text" class="form-control border-0 shadow-none" v-model="noteTitle" />
+        <input type="text" style="font-weight: bold;" class="form-control border-0 shadow-none" v-model="noteTitle" />
     </template>
     <template v-slot:body>
       <textarea
@@ -35,6 +35,7 @@
         style="resize: none"
         :rows="calculateRows(noteContent)"
       ></textarea>
+      <br>
       <Icon :onClose="checkModal" @deleteNote="deleteNote"></Icon>
     </template>
   </Modal>
@@ -46,7 +47,7 @@ import FormComponent from './Reusable/FormComponent.vue'
 import AddedNoteComponent from './Reusable/AddedNoteComponent.vue'
 import Modal from './Reusable/Modal.vue'
 import Icon from './icons/Icons.vue'
-import { ref, watch } from 'vue'
+// import { ref, watch } from 'vue'
 // import { userId  } from './auth/Authenticate'
 
 export default {
@@ -110,7 +111,7 @@ export default {
       }
     },
     update() {
-      alert('update called')
+      // alert('update called')
       const note = {
         title: this.noteTitle,
         text: this.noteContent,
@@ -208,9 +209,14 @@ export default {
     0 2px 6px 2px rgb(60 64 67 / 15%);
   border: 1px solid #e0e1e0;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .contents-icon {
   display: flex;
+}
+
+svg {
+  cursor: pointer;
 }
 </style>

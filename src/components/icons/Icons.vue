@@ -71,7 +71,7 @@
         />
       </svg>
     </div>
-    <div class="pull-right" @click="this.$emit('close')">Close</div>
+    <div class="pull-right close-btn" style="cursor: pointer;" @click="this.$emit('close')">Close</div>
   </div>
 </template>
 
@@ -96,7 +96,9 @@ export default {
 
   /* filter: gray; */
   /* fill: rgb(166, 166, 171);  */
-  fill:rgb(137, 76, 76);
+  /* fill:rgb(137, 76, 76); */
+  fill: rgb(82 89 116);
+  /* fill:rgb(101 104 92); */
 }
 
 .thumbtack-circle {

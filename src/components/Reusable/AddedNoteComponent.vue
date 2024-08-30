@@ -161,7 +161,9 @@ export default {
 
 .check-circle {
   /* background-color: rgb(149, 149, 149); */
-  background-color: rgb(137, 76, 76);
+  /* background-color: rgb(137, 76, 76); */
+  /* background-color: rgb(101 104 92); */
+  background-color: rgb(82 89 116);
   padding: 5px;
   border-radius: 60%;
   width: 30px;
