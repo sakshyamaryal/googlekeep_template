@@ -106,7 +106,11 @@ export default {
 
         return this.$router.push({ path: '/home' })
       } else {
-        alert('Invalid Credentials')
+        // alert('Invalid Credentials')
+        this.$toast.open({
+          message: 'Invalid Login Credentials',
+          type: 'error'
+        })
       }
     }
   }

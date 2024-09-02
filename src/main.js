@@ -10,6 +10,10 @@ import App from './App.vue';
 import router from './router';
 import clickOutside from './store/directives/clickOutside';
 import LaravelPermissionToVueJS from 'laravel-permission-to-vuejs'
+import ToastPlugin from 'vue-toast-notification';
+// Import one of the available themes
+//import 'vue-toast-notification/dist/theme-default.css';
+import 'vue-toast-notification/dist/theme-bootstrap.css';
 
 const app = createApp(App);
 
@@ -18,6 +22,6 @@ app.component('font-awesome-icon', FontAwesomeIcon);
 app.use(router);
 app.use(LaravelPermissionToVueJS)
 app.use(store);
-// app.use(authStore);
+app.use(ToastPlugin);
   
 app.mount('#app');

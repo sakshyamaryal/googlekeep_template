@@ -121,7 +121,7 @@ export default {
       }
     },
     update() {
-      alert('update called')
+      // alert('update called')
       const note = {
         title: this.noteTitle,
         text: this.noteContent,

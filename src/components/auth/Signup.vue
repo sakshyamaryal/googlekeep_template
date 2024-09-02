@@ -129,7 +129,11 @@ export default {
         await this.addUser(data)
         // performLogIn(this.$store.getters.getToken);
         if (this.$store.getters.getLoginstatus) {
-          alert('registration successfull')
+          // alert('registration successfull')
+          this.$toast.open({
+            message: 'Registration Successfull',
+            type: 'success'
+          })
           this.$router.push({ path: '/login' })
         }        
         
