@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 import { SET_USERROLE, GET_USERROLE } from './storeConstants'
 import { login as performLogIn, addUserRole, addUserID } from '../components/auth/Authenticate'
+import swal from 'sweetalert'
 
 const store = createStore({
   state() {
@@ -133,7 +134,14 @@ const store = createStore({
       const response = await axios.post('http://localhost:8000/api/notes', note)
 
       if (response.data.data === 'permissionismissing') {
-        alert(' User Doesnot Have Add Role ')
+        // alert(' User Doesnot Have Add Role ')
+        swal({
+          title: 'Oops',
+          text: 'User Doesnot Have Add Role...',
+          icon: 'error',
+          timer: 2000,
+          buttons: false
+        })
       } else {
         commit('ADD_NOTE', response.data.data)
       }
@@ -146,16 +154,32 @@ const store = createStore({
     async updateNote({ commit }, note) {
       const response = await axios.put(`http://localhost:8000/api/notes/${note.id}`, note)
       if (response.data.data === 'permissionismissing') {
-        alert(' User Doesnot Have Update Role ')
+        // alert(' User Doesnot Have Update Role ')
+        swal({
+          title: 'Oops',
+          text: 'User Doesnot have Update Permission...',
+          icon: 'error',
+          timer: 2000,
+          buttons: false
+        })
       } else {
         commit('UPDATE_NOTE', response.data.data)
       }
     },
 
     async deleteNote({ commit }, deletenote) {
-      const response = await axios.delete(`http://localhost:8000/api/notes/${deletenote.id}/${deletenote.user_id}`)
+      const response = await axios.delete(
+        `http://localhost:8000/api/notes/${deletenote.id}/${deletenote.user_id}`
+      )
       if (response.data.data === 'permissionismissing') {
-        alert('User Doesnot have Delete Permission')
+        // alert('User Doesnot have Delete Permission')
+        swal({
+          title: 'Oops',
+          text: 'User Doesnot have Delete Permission...',
+          icon: 'error',
+          timer: 2000,
+          buttons: false
+        })
       } else {
         commit('DELETE_NOTE', deletenote.id)
       }
