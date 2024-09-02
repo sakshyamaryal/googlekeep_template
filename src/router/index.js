@@ -4,7 +4,7 @@ import { isAuthenticated } from '../components/auth/Authenticate'
 const routes = [
   {
     path: '/home',
-    name: 'todo',
+    name: 'notes',
     component: () => import('../components/Notes.vue'),
     meta: {
       requiresAuth: true // Add meta field to indicate protected route
@@ -25,7 +25,7 @@ const routes = [
     name: 'users',
     component: () => import('../components/pages/Users.vue'),
     meta: {
-      requiresAuth: true 
+      requiresAuth: true
     }
   },
   {
@@ -33,10 +33,9 @@ const routes = [
     name: 'role',
     component: () => import('../components/pages/Role.vue'),
     meta: {
-      requiresAuth: true 
+      requiresAuth: true
     }
-  },
-
+  }
 ]
 
 const router = createRouter({

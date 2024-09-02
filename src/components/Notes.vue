@@ -51,6 +51,7 @@ import Icon from './icons/Icons.vue'
 // import { userId  } from './auth/Authenticate'
 
 export default {
+  name:"Notes",
   // setup() {
   //   const userid = ref(userId())
 

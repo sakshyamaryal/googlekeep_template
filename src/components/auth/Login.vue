@@ -95,16 +95,18 @@ export default {
       if (this.$store.getters.getLoginstatus) {
         // console.log(this.$route.path('/home'));
         // return this.$route.path('/home')
-        console.log(this.$store.getters.getRole, " is the role");
+        console.log(this.$store.getters.getRole, ' is the role')
         performLogIn(this.$store.getters.getToken)
         addUserRole(this.$store.getters.getRole)
-        this.$store.commit(`${SET_USERROLE}`);
+        this.$store.commit(`${SET_USERROLE}`)
 
         // if (this.$store.getters.getCurrentUserId) {
-        //   addUserID(this.$store.getters.getCurrentUserId) 
+        //   addUserID(this.$store.getters.getCurrentUserId)
         // }
 
         return this.$router.push({ path: '/home' })
+      } else {
+        alert('Invalid Credentials')
       }
     }
   }
