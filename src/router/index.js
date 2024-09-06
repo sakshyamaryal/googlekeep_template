@@ -1,7 +1,17 @@
 import { createWebHistory, createRouter } from 'vue-router'
-import { isAuthenticated } from '../components/auth/Authenticate'
+import { isAuthenticated, userrole } from '../components/auth/Authenticate'
+
+import HomeView from '../components/Notes.vue'
 
 const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: HomeView,
+    meta: {
+      requiresAuth: true
+    }
+  },
   {
     path: '/home',
     name: 'notes',
@@ -44,17 +54,25 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!isAuthenticated()) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      })
+  console.log(to, ' is to ')
+  if ((to.fullPath === '/users' || to.fullPath === '/role') && userrole() !== 'admin') {
+    next({
+      path: '/home',
+      query: { redirect: to.fullPath }
+    })
+  } else {
+    if (to.matched.some((record) => record.meta.requiresAuth)) {
+      if (!isAuthenticated()) {
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath }
+        })
+      } else {
+        next()
+      }
     } else {
       next()
     }
-  } else {
-    next()
   }
 })
 

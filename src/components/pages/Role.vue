@@ -80,13 +80,21 @@ export default {
   data() {
     return {
       roles: [],
-      newRoleName: ''
+      newRoleName: '',
+      bearertoken: {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
     }
   },
   methods: {
     async getRolesAndPermission() {
       try {
-        const response = await axios.get('http://localhost:8000/api/rolesAndPermission')
+        const response = await axios.get(
+          'http://localhost:8000/api/rolesAndPermission',
+          this.bearertoken
+        )
         this.roles = response.data.data
 
         this.roles.forEach((role) => {
@@ -100,11 +108,15 @@ export default {
     async updatePermission(roleId, permissionType, isChecked) {
       try {
         await axios
-          .post('http://localhost:8000/api/updatePermission', {
-            role_id: roleId,
-            permission: permissionType,
-            is_checked: isChecked
-          })
+          .post(
+            'http://localhost:8000/api/updatePermission',
+            {
+              role_id: roleId,
+              permission: permissionType,
+              is_checked: isChecked
+            },
+            this.bearertoken
+          )
           .then((res) => {
             if (res.data.success) {
               this.$toast.open({
@@ -126,9 +138,13 @@ export default {
 
     async createRole() {
       try {
-        const response = await axios.post('http://localhost:8000/api/createRole', {
-          name: this.newRoleName
-        })
+        const response = await axios.post(
+          'http://localhost:8000/api/createRole',
+          {
+            name: this.newRoleName
+          },
+          this.bearertoken
+        )
         if (response) {
           this.$toast.open({
             message: 'New Role Added',

@@ -51,13 +51,18 @@ export default {
   data() {
     return {
       users: [],
-      roles: []
+      roles: [],
+      bearertoken: {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
     }
   },
   methods: {
     async getUsers() {
       try {
-        const response = await axios.get('http://localhost:8000/api/users')
+        const response = await axios.get('http://localhost:8000/api/users', this.bearertoken)
         this.users = response.data.data
       } catch (error) {
         console.log(error)
@@ -66,7 +71,10 @@ export default {
 
     async getRoles() {
       try {
-        const response = await axios.get('http://localhost:8000/api/rolesAndPermission')
+        const response = await axios.get(
+          'http://localhost:8000/api/rolesAndPermission',
+          this.bearertoken
+        )
         this.roles = response.data.data
 
         this.users.forEach((user) => {
@@ -81,10 +89,14 @@ export default {
     async updateUserRole(userId, roleId) {
       try {
         await axios
-          .post('http://localhost:8000/api/updateUserRole', {
-            user_id: userId,
-            role_id: roleId
-          })
+          .post(
+            'http://localhost:8000/api/updateUserRole',
+            {
+              user_id: userId,
+              role_id: roleId
+            },
+            this.bearertoken
+          )
           .then((res) => {
             if (res.data.success) {
               this.$toast.open({

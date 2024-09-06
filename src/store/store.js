@@ -14,7 +14,7 @@ const store = createStore({
       loginStatus: false,
       token: '',
       userRole: '',
-      userid: 0
+      userid: 0,
     }
   },
   getters: {
@@ -125,7 +125,6 @@ const store = createStore({
   },
   actions: {
     async fetchNotes({ commit }, userid) {
-      console.log(userid)
       const response = await axios.get(`http://localhost:8000/api/notes/${userid}`, userid)
       commit('SET_NOTES', response.data.data)
     },

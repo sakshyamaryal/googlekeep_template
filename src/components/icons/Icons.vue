@@ -103,7 +103,9 @@ export default {
 
 .thumbtack-circle {
   /* filter: invert(48%) sepia(49%) saturate(2476%) hue-rotate(148deg) brightness(223%) contrast(19%); */
-  filter: brightness(0) invert(1);
+  /* filter: brightness(0) invert(1); */
+  fill: rgb(254, 254, 254);
+
 }
 /* svg {
 } */
