@@ -15,6 +15,11 @@ const store = createStore({
       token: '',
       userRole: '',
       userid: 0,
+      bearertoken: {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
     }
   },
   getters: {
@@ -115,6 +120,12 @@ const store = createStore({
         state.userid = userDetails.user.id
         localStorage.setItem('userid', userDetails.user.id)
         sessionStorage.setItem('userid', userDetails.user.id)
+
+        state.bearertoken = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        }
       } else {
         state.loginStatus = false
         state.token = ''
@@ -125,12 +136,19 @@ const store = createStore({
   },
   actions: {
     async fetchNotes({ commit }, userid) {
-      const response = await axios.get(`http://localhost:8000/api/notes/${userid}`, userid)
+      const response = await axios.get(
+        `http://localhost:8000/api/notes/${userid}`,
+        this.state.bearertoken
+      )
       commit('SET_NOTES', response.data.data)
     },
 
     async addNote({ commit }, note) {
-      const response = await axios.post('http://localhost:8000/api/notes', note)
+      const response = await axios.post(
+        'http://localhost:8000/api/notes',
+        note,
+        this.state.bearertoken
+      )
 
       if (response.data.data === 'permissionismissing') {
         // alert(' User Doesnot Have Add Role ')
@@ -151,7 +169,11 @@ const store = createStore({
     },
 
     async updateNote({ commit }, note) {
-      const response = await axios.put(`http://localhost:8000/api/notes/${note.id}`, note)
+      const response = await axios.put(
+        `http://localhost:8000/api/notes/${note.id}`,
+        note,
+        this.state.bearertoken
+      )
       if (response.data.data === 'permissionismissing') {
         // alert(' User Doesnot Have Update Role ')
         swal({
@@ -168,7 +190,8 @@ const store = createStore({
 
     async deleteNote({ commit }, deletenote) {
       const response = await axios.delete(
-        `http://localhost:8000/api/notes/${deletenote.id}/${deletenote.user_id}`
+        `http://localhost:8000/api/notes/${deletenote.id}/${deletenote.user_id}`,
+        this.state.bearertoken
       )
       if (response.data.data === 'permissionismissing') {
         // alert('User Doesnot have Delete Permission')
